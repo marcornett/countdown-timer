@@ -5,9 +5,11 @@ import Timer from './Timer'
 
 function App() {
   const [currTime, setTime] = useState('')
-  const [event, setEvent] = useState('')
-
-  const current = new Date()
+  const [state, setState] = useState({
+    event: '',
+    date: '',
+    optionalTime: '',
+  })
 
   useEffect(() => {
     setInterval(() => {
@@ -15,34 +17,61 @@ function App() {
     }, 1000)
   }, [])
 
+  const current = new Date()
+
   const handleSubmit = (e) => {
     e.preventDefault()
     const then = moment()
   }
 
-  const handleEventChange = (e) => {
-    setEvent(e.target.value)
+  const handleChange = (e) => {
+    console.log(e.target.name)
+    setState({
+      ...state,
+      [e.target.name]: e.target.value,
+    })
+    console.log(state)
   }
 
   return (
     <div className="App">
       <form action="" onSubmit={handleSubmit}>
 
-        <span>Event: </span>
-        <input type="text" onChange={handleEventChange} value={event} />
+        <label>Event: </label>
+        <input
+          type="text"
+          name="event"
+          onChange={handleChange}
+          value={state.event} />
         <p></p>
 
-        <span>Date: </span>
-        <input type="date" name="" id="" />
+        <label>Date: </label>
+        <input
+          type="date"
+          name="date"
+          id=""
+          onChange={handleChange}
+          value={state.date} />
         <p></p>
 
-        <span>Optional time: </span>
-        <input type="text" />
+        <label>Optional Time:
+        <input
+            type="text"
+            name="optionalTime"
+            onChange={handleChange}
+            value={state.optionalTime} />
+        </label>
 
-        <p><input type="submit" value="Start" /></p>
+        <p>
+          <input
+            type="submit"
+            value="Start" />
+        </p>
       </form>
 
       <div>Time: {currTime}</div>
+
+      <Timer />
     </div>
   );
 }
