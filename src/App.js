@@ -7,30 +7,74 @@ function App() {
   const [currTime, setTime] = useState('')
   const [state, setState] = useState({
     event: '',
-    date: '',
     optionalTime: '',
   })
 
-  useEffect(() => {
-    setInterval(() => {
-      setTime(new Date().toLocaleString())
-    }, 1000)
-  }, [])
+  const [thenDate, setThenDate] = useState('')
+  const [calcDate, setCalcDate] = useState('')
 
-  const current = new Date()
+  const [countdown, setCountdown] = useState({
+    days: '',
+    hours: '',
+    minutes: '',
+    seconds: '',
+  })
+
+  useEffect(() => {
+    let countdownInterval = setInterval(() => {
+      if (calcDate.length) {
+        const now = moment()
+        console.log('now:', now.toString())
+        console.log('thenDate:', thenDate)
+        console.log('calcDate:', calcDate)
+        const countdown = moment(thenDate - now)
+
+        const days = countdown.format('DD')
+        const hours = countdown.format('HH')
+        const minutes = countdown.format('mm')
+        const seconds = countdown.format('ss')
+
+        setCountdown({
+          ...countdown,
+          days,
+          hours,
+          minutes,
+          seconds,
+        })
+      }
+
+      // setTime(new Date().toLocaleString())
+    }, 1000)
+
+    return () => {
+      clearInterval(countdownInterval)
+    }
+  }, [state.thenDate, countdown])
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const then = moment()
+    // const thenDate = moment(state.date, "YYYY-MM-DD")
+    // setState({
+    //   ...state,
+    //   thenDate
+    // })
   }
 
   const handleChange = (e) => {
-    console.log(e.target.name)
     setState({
       ...state,
       [e.target.name]: e.target.value,
     })
-    console.log(state)
+  }
+
+  const handleThenDateChange = (e) =>{
+    let date = new Date(e.target.value)
+    setCalcDate(date)
+    const now = moment().format('M/D/YYYY, h:mm:ss')
+    console.log(date.toLocaleString())
+    console.log(now)
+    console.log(date.toLocaleDateString() - now.toLocaleString())
+    setThenDate(e.target.value)
   }
 
   return (
@@ -48,10 +92,10 @@ function App() {
         <label>Date: </label>
         <input
           type="date"
-          name="date"
+          name="thenDate"
           id=""
-          onChange={handleChange}
-          value={state.date} />
+          onChange={handleThenDateChange}
+          value={thenDate} />
         <p></p>
 
         <label>Optional Time:
@@ -69,9 +113,7 @@ function App() {
         </p>
       </form>
 
-      <div>Time: {currTime}</div>
-
-      <Timer />
+      {/* <Timer /> */}
     </div>
   );
 }
