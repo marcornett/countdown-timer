@@ -1,4 +1,8 @@
 # countdown-timer
+This project is part of my 100 days of code challenge. I decided to venture into an unknown territory with dates in React.
+
+[100 days of code](https://github.com/marcornett/100-days-of-code)
+
 
 # User Stories
 
