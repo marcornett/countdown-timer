@@ -8,26 +8,44 @@ function App() {
   const [state, setState] = useState({
     event: '',
     optionalTime: '',
+    days: '',
+    hours: '',
+    minutes: '',
+    seconds: '',
   })
 
   const [thenDate, setThenDate] = useState('')
-  const [countdown, setCountDown] = useState('')
 
   momentDurationFormatSetup(moment)
 
   useEffect(() => {
+    const {optionalTime} = state
+    // TODO: Optional date concatenation causes repetitive occurances
+    // if(optionalTime.length){
+    //   setThenDate(thenDate.concat(' ', optionalTime))
+    // }
     let countdownInterval = setInterval(() => {
       if (thenDate.length) {
+        
+        console.log(thenDate)
         const now = moment().format('M/D/YYYY, h:mm:ss')
         let ms = moment(thenDate).diff(moment(now))
-        setCountDown(moment.duration(ms).format('D , H, m, s'))
+        const countdown = moment.duration(ms).format('D H m s').split(' ')
+
+        setState({
+          ...state,
+          days: countdown[0],
+          hours: countdown[1],
+          minutes: countdown[2],
+          seconds: countdown[3],
+        })
       }
     }, 1000)
 
     return () => {
       clearInterval(countdownInterval)
     }
-  }, [thenDate])
+  }, [state, thenDate])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -43,7 +61,8 @@ function App() {
   const handleThenDateChange = (e) =>{
     setThenDate(e.target.value)
   }
-
+  
+  const {days, hours, minutes, seconds, event} = state
   return (
     <div className="App">
       <form action="" onSubmit={handleSubmit}>
@@ -56,32 +75,37 @@ function App() {
           value={state.event} />
         <p></p>
 
-        <label>Date: </label>
-        <input
-          type="date"
-          name="thenDate"
-          id=""
-          onChange={handleThenDateChange}
-          value={thenDate} />
+        <label>Date: 
+          <input
+            type="date"
+            name="thenDate"
+            id=""
+            onChange={handleThenDateChange}
+            value={thenDate} 
+          />
+        </label>
+        
         <p></p>
 
         <label>Optional Time:
-        <input
-            type="text"
-            name="optionalTime"
+          <input 
+            type="time" 
+            name="optionalTime" 
             onChange={handleChange}
-            value={state.optionalTime} />
+            value={state.optionalTime}
+            id=""
+          />
         </label>
-
-        <p>
-          <input
-            type="submit"
-            value="Start" />
-        </p>
-        <p>{countdown}</p>
       </form>
 
-
+   
+    <Timer 
+      days={days} 
+      hours={hours} 
+      minutes={minutes} 
+      seconds={seconds}
+      event={event}
+    />
     </div>
   );
 }
