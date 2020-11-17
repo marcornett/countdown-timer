@@ -20,16 +20,20 @@ function App() {
 
   useEffect(() => {
     const {optionalTime} = state
-    // TODO: Optional date concatenation causes repetitive occurances
+    // TODO: Optional date concatenation causes repetitive occurances or error
     // if(optionalTime.length){
-    //   setThenDate(thenDate.concat(' ', optionalTime))
+      const dateTimeConcat = thenDate + ', ' + optionalTime
+      const optionalDateTime = new Date(dateTimeConcat)
+      // setThenDate(optionalDateTime)
     // }
+
     let countdownInterval = setInterval(() => {
       if (thenDate.length) {
-        
-        console.log(thenDate)
+        let momentDate = optionalDateTime ? optionalDateTime : thenDate
+        console.log(optionalDateTime)
         const now = moment().format('M/D/YYYY, h:mm:ss')
-        let ms = moment(thenDate).diff(moment(now))
+
+        let ms = moment(momentDate).diff(moment(now))
         const countdown = moment.duration(ms).format('D H m s').split(' ')
 
         setState({
@@ -95,7 +99,8 @@ function App() {
             value={state.optionalTime}
             id=""
           />
-        </label>
+<input type="datetime-local" name="" id=""/>       
+ </label>
       </form>
 
    
