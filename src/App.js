@@ -7,34 +7,35 @@ import Timer from './Timer'
 function App() {
   const [state, setState] = useState({
     event: '',
-    optionalTime: '',
     days: '',
     hours: '',
     minutes: '',
     seconds: '',
   })
 
-  const [thenDate, setThenDate] = useState('')
+  const [inputDate, setInputDate] = useState('')
 
   momentDurationFormatSetup(moment)
 
   useEffect(() => {
-    const {optionalTime} = state
-    // TODO: Optional date concatenation causes repetitive occurances or error
-    // if(optionalTime.length){
-      const dateTimeConcat = thenDate + ', ' + optionalTime
-      const optionalDateTime = new Date(dateTimeConcat)
-      // setThenDate(optionalDateTime)
-    // }
-
     let countdownInterval = setInterval(() => {
-      if (thenDate.length) {
-        let momentDate = optionalDateTime ? optionalDateTime : thenDate
-        console.log(optionalDateTime)
+      if (inputDate.length) {
+        
         const now = moment().format('M/D/YYYY, h:mm:ss')
 
-        let ms = moment(momentDate).diff(moment(now))
+        // console.log({now})
+        // console.log({inputDate})
+        let ms = moment(inputDate).diff(moment(now))
         const countdown = moment.duration(ms).format('D H m s').split(' ')
+
+        // fill array to 4 items if not 4
+        if(countdown.length < 4){
+          let fillAmount = 4 - countdown.length
+          // add [fillAmount] of 0s to beginning of array
+          // for(let i = 1; fillAmount < countdown.length; i++){
+          //   console.log(i)
+          // }
+        }
 
         setState({
           ...state,
@@ -49,7 +50,7 @@ function App() {
     return () => {
       clearInterval(countdownInterval)
     }
-  }, [state, thenDate])
+  }, [state, inputDate])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -63,7 +64,7 @@ function App() {
   }
 
   const handleThenDateChange = (e) =>{
-    setThenDate(e.target.value)
+    setInputDate(e.target.value)
   }
   
   const {days, hours, minutes, seconds, event} = state
@@ -80,27 +81,22 @@ function App() {
         <p></p>
 
         <label>Date: 
-          <input
+          {/* <input
             type="date"
             name="thenDate"
             id=""
             onChange={handleThenDateChange}
             value={thenDate} 
-          />
-        </label>
-        
-        <p></p>
+          /> */}
 
-        <label>Optional Time:
-          <input 
-            type="time" 
-            name="optionalTime" 
-            onChange={handleChange}
-            value={state.optionalTime}
-            id=""
-          />
-<input type="datetime-local" name="" id=""/>       
- </label>
+        <input 
+          type="datetime-local" 
+          name="thenDate" 
+          id="" 
+          onChange={handleThenDateChange}
+          value={inputDate} 
+        />
+        </label>
       </form>
 
    
