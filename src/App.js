@@ -26,17 +26,12 @@ function App() {
         // console.log({now})
         // console.log({inputDate})
         let ms = moment(inputDate).diff(moment(now))
+        // TODO: countdown should be a object
         const countdown = moment.duration(ms).format('D H m s').split(' ')
-
-        // fill array to 4 items if not 4
-        if(countdown.length < 4){
-          let fillAmount = 4 - countdown.length
-          // add [fillAmount] of 0s to beginning of array
-          // for(let i = 1; fillAmount < countdown.length; i++){
-          //   console.log(i)
-          // }
-        }
-
+        // TODO: add each value backwards and assign appropriate key names,
+        // TODO: if not enough values, default to 0
+        const countdownObj = {}
+        
         setState({
           ...state,
           days: countdown[0],
