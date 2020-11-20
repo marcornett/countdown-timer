@@ -7,10 +7,7 @@ import Timer from './Timer'
 function App() {
   const [state, setState] = useState({
     event: '',
-    days: '',
-    hours: '',
-    minutes: '',
-    seconds: '',
+    countdown: '',
   })
 
   const [inputDate, setInputDate] = useState('')
@@ -22,22 +19,14 @@ function App() {
       if (inputDate.length) {
         
         const now = moment().format('M/D/YYYY, h:mm:ss')
+        const ms = moment(inputDate).diff(moment(now))
+        const countdown = moment.duration(ms).format('D [days] H [hours] m [minutes] s [seconds]')
 
-        // console.log({now})
-        // console.log({inputDate})
-        let ms = moment(inputDate).diff(moment(now))
-        // TODO: countdown should be a object
-        const countdown = moment.duration(ms).format('D H m s').split(' ')
-        // TODO: add each value backwards and assign appropriate key names,
-        // TODO: if not enough values, default to 0
-        const countdownObj = {}
+        const countdownList = countdown.split(' ')
         
         setState({
           ...state,
-          days: countdown[0],
-          hours: countdown[1],
-          minutes: countdown[2],
-          seconds: countdown[3],
+          countdown: countdownList,
         })
       }
     }, 1000)
@@ -62,7 +51,7 @@ function App() {
     setInputDate(e.target.value)
   }
   
-  const {days, hours, minutes, seconds, event} = state
+  const {countdown, event} = state
   return (
     <div className="App">
       <form action="" onSubmit={handleSubmit}>
@@ -94,14 +83,13 @@ function App() {
         </label>
       </form>
 
-   
-    <Timer 
-      days={days} 
-      hours={hours} 
-      minutes={minutes} 
-      seconds={seconds}
-      event={event}
-    />
+        <div>
+          {countdown ? 
+            countdown.map((unit, i)=>(
+              <div key={i} class={i + 1}>{unit}</div>
+            ))
+          : null}
+        </div>
     </div>
   );
 }
