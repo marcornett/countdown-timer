@@ -2,12 +2,15 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import moment from 'moment'
 import momentDurationFormatSetup from 'moment-duration-format'
-import Timer from './Timer'
 
 function App() {
   const [state, setState] = useState({
     event: '',
     countdown: '',
+    days: '',
+    hours: '',
+    minutes: '',
+    seconds: '',
   })
 
   const [inputDate, setInputDate] = useState('')
@@ -17,16 +20,21 @@ function App() {
   useEffect(() => {
     let countdownInterval = setInterval(() => {
       if (inputDate.length) {
-        
-        const now = moment().format('M/D/YYYY, h:mm:ss')
-        const ms = moment(inputDate).diff(moment(now))
-        const countdown = moment.duration(ms).format('D [days] H [hours] m [minutes] s [seconds]')
 
-        const countdownList = countdown.split(' ')
-        
+        const now = moment().format('M/D/YYYY, h:mm:ss A')
+        const ms = moment(inputDate).diff(moment(now))
+        const countdown = moment.duration(ms).format('D H m s')
+        const countdownList = countdown.split(' ').reverse()
+        console.log(countdownList)
+
+        // TODO: Stop setting date if countdown reaches a negative number
         setState({
           ...state,
           countdown: countdownList,
+          days: countdownList[3] || '0',
+          hours: countdownList[2] || '0',
+          minutes: countdownList[1] || '0',
+          seconds: countdownList[0] || '0',
         })
       }
     }, 1000)
@@ -36,10 +44,6 @@ function App() {
     }
   }, [state, inputDate])
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-  }
-
   const handleChange = (e) => {
     setState({
       ...state,
@@ -47,49 +51,52 @@ function App() {
     })
   }
 
-  const handleThenDateChange = (e) =>{
+  const handleThenDateChange = (e) => {
     setInputDate(e.target.value)
   }
-  
-  const {countdown, event} = state
+  const { countdown, days, hours, minutes, seconds, event } = state
   return (
     <div className="App">
-      <form action="" onSubmit={handleSubmit}>
-
-        <label>Event: </label>
-        <input
-          type="text"
-          name="event"
-          onChange={handleChange}
-          value={state.event} />
-        <p></p>
-
-        <label>Date: 
-          {/* <input
-            type="date"
-            name="thenDate"
-            id=""
-            onChange={handleThenDateChange}
-            value={thenDate} 
-          /> */}
-
-        <input 
-          type="datetime-local" 
-          name="thenDate" 
-          id="" 
-          onChange={handleThenDateChange}
-          value={inputDate} 
-        />
-        </label>
-      </form>
-
-        <div>
-          {countdown ? 
-            countdown.map((unit, i)=>(
-              <div key={i} class={i + 1}>{unit}</div>
-            ))
-          : null}
+      <h2
+        className="countdown__event"
+        onChange={handleChange}
+      // TODO contentEditable: npm react-contenteditable
+      >
+        Event Here
+      </h2>
+      <div className="countdown__parent">
+        <div className="countdown">
+          <div>{days ? days : '0'}
+            <br />
+            days
+            </div>
+          <div>{hours ? hours : '0'}
+            <br />
+            hours
+            </div>
+          <div>{minutes ? minutes : '0'}
+            <br />
+            minutes
+            </div>
+          <div>{seconds ? seconds : '0'}
+            <br />
+            seconds
+            </div>
         </div>
+
+      </div>
+      <div className="date__parent">
+        <label htmlFor="" className="date__label">
+          {event}
+          <input
+            type="datetime-local"
+            name="thenDate"
+            className="date__input"
+            onChange={handleThenDateChange}
+            value={inputDate}
+          />
+        </label>
+      </div>
     </div>
   );
 }
