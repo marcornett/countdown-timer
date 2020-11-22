@@ -1,0 +1,32 @@
+* {
+  box-sizing: border-box;
+}
+
+.countdown__event {
+  text-align: center;
+}
+
+.countdown__parent {
+}
+
+.countdown {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
+}
+
+.countdown div {
+  flex: 0 1 150px;
+}
+
+.date__parent {
+  display: grid;
+  place-items: center;
+}
+
+.date__input {
+  text-align: center;
+  display: block;
+  margin: 0 auto;
+}
