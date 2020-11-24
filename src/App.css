@@ -1,28 +1,20 @@
 * {
   box-sizing: border-box;
 }
-
+body{
+  color: white;
+  background-color: black;
+}
 .countdown__event {
   text-align: center;
+  width: 400px;
+  margin: 0 auto;
 }
 
-.countdown__parent {
-}
 
-.countdown {
+.date__parent{
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  text-align: center;
-}
-
-.countdown div {
-  flex: 0 1 150px;
-}
-
-.date__parent {
-  display: grid;
-  place-items: center;
 }
 
 .date__input {
