@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import moment from 'moment'
 import momentDurationFormatSetup from 'moment-duration-format'
+import ContentEditable from 'react-contenteditable'
+import Countdown from './Countdown'
 
 function App() {
   const [state, setState] = useState({
@@ -15,6 +17,15 @@ function App() {
 
   const [inputDate, setInputDate] = useState('')
 
+  const text = useRef('Event')
+
+  const editableChange = (event) => {
+    text.current = event.target.value
+  }
+  const handleThenDateChange = (e) => {
+    setInputDate(e.target.value)
+  }
+
   momentDurationFormatSetup(moment)
 
   useEffect(() => {
@@ -23,18 +34,17 @@ function App() {
 
         const now = moment().format('M/D/YYYY, h:mm:ss A')
         const ms = moment(inputDate).diff(moment(now))
-        const countdown = moment.duration(ms).format('D H m s')
+        const countdown = moment.duration(ms).format('DD HH mm ss')
         const countdownList = countdown.split(' ').reverse()
-        console.log(countdownList)
 
         // TODO: Stop setting date if countdown reaches a negative number
         setState({
           ...state,
           countdown: countdownList,
-          days: countdownList[3] || '0',
-          hours: countdownList[2] || '0',
-          minutes: countdownList[1] || '0',
-          seconds: countdownList[0] || '0',
+          days: countdownList[3] || '00',
+          hours: countdownList[2] || '00',
+          minutes: countdownList[1] || '00',
+          seconds: countdownList[0] || '00',
         })
       }
     }, 1000)
@@ -44,50 +54,13 @@ function App() {
     }
   }, [state, inputDate])
 
-  const handleChange = (e) => {
-    setState({
-      ...state,
-      [e.target.name]: e.target.value,
-    })
-  }
 
-  const handleThenDateChange = (e) => {
-    setInputDate(e.target.value)
-  }
   const { countdown, days, hours, minutes, seconds, event } = state
   return (
     <div className="App">
-      <h2
-        className="countdown__event"
-        onChange={handleChange}
-      // TODO contentEditable: npm react-contenteditable
-      >
-        Event Here
-      </h2>
-      <div className="countdown__parent">
-        <div className="countdown">
-          <div>{days ? days : '0'}
-            <br />
-            days
-            </div>
-          <div>{hours ? hours : '0'}
-            <br />
-            hours
-            </div>
-          <div>{minutes ? minutes : '0'}
-            <br />
-            minutes
-            </div>
-          <div>{seconds ? seconds : '0'}
-            <br />
-            seconds
-            </div>
-        </div>
-
-      </div>
       <div className="date__parent">
         <label htmlFor="" className="date__label">
-          {event}
+          {text.current}
           <input
             type="datetime-local"
             name="thenDate"
@@ -97,6 +70,20 @@ function App() {
           />
         </label>
       </div>
+      
+      <ContentEditable 
+        html={text.current}
+        disabled={false}
+        onChange={editableChange}
+        tagName='h1'
+        className="countdown__event"
+      />
+        <Countdown 
+          days={days} 
+          hours={hours} 
+          minutes={minutes} 
+          seconds={seconds} 
+        />
     </div>
   );
 }
