@@ -1,0 +1,16 @@
+
+.countdown{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+
+.countdown div {
+    flex: 0 1 200px;
+}
+  
+.countdown h2{
+    font-family: 'Lato', sans-serif;
+    font-size: 120px;
+}
