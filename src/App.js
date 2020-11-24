@@ -70,7 +70,7 @@ function App() {
           />
         </label>
       </div>
-      
+
       <ContentEditable 
         html={text.current}
         disabled={false}
@@ -78,6 +78,7 @@ function App() {
         tagName='h1'
         className="countdown__event"
       />
+      <p>Edit me</p>
         <Countdown 
           days={days} 
           hours={hours} 
